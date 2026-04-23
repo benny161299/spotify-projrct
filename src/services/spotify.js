@@ -136,11 +136,12 @@ export async function createPlaylist(name, description, accessToken) {
 export async function addTracksToPlaylist(playlistId, uris, accessToken) {
   if (!uris || uris.length === 0) return;
   
-  console.log(`[Spotify] Adding ${uris.length} tracks to playlist: ${playlistId}`);
+  // Format: uris=spotify:track:abc,spotify:track:def
+  const urisParam = encodeURIComponent(uris.join(','));
+  const url = `${BASE}/playlists/${playlistId}/tracks?uris=${urisParam}`;
   
-  const url = `${BASE}/playlists/${playlistId}/tracks`;
   return spotifyFetch(url, accessToken, {
     method: 'POST',
-    body: JSON.stringify({ uris }),
+    // No body needed when using query params
   });
 }
