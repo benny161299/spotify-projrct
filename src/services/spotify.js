@@ -118,7 +118,7 @@ export async function createPlaylist(name, description, accessToken) {
   const body = {
     name,
     description,
-    public: false,
+    public: true,
   };
   return spotifyFetch(url, accessToken, {
     method: 'POST',
@@ -136,12 +136,17 @@ export async function createPlaylist(name, description, accessToken) {
 export async function addTracksToPlaylist(playlistId, uris, accessToken) {
   if (!uris || uris.length === 0) return;
   
-  // Format: uris=spotify:track:abc,spotify:track:def
-  const urisParam = encodeURIComponent(uris.join(','));
-  const url = `${BASE}/playlists/${playlistId}/tracks?uris=${urisParam}`;
+  // Wait 1 second to ensure Spotify has registered the new playlist
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  const url = `${BASE}/playlists/${playlistId}/tracks`;
+  const body = {
+    uris: uris,
+    position: 0
+  };
   
   return spotifyFetch(url, accessToken, {
     method: 'POST',
-    // No body needed when using query params
+    body: JSON.stringify(body),
   });
 }
