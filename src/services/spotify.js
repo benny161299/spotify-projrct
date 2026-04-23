@@ -113,12 +113,12 @@ export async function searchAllTracks(tracks, accessToken, onProgress) {
  * @param {string} accessToken
  * @returns {Promise<{id: string, external_urls: {spotify: string}}>}
  */
-export async function createPlaylist(userId, name, description, accessToken) {
-  const url = `${BASE}/users/${userId}/playlists`;
+export async function createPlaylist(name, description, accessToken) {
+  const url = `${BASE}/me/playlists`; // Modern endpoint, doesn't need userId
   const body = {
     name,
     description,
-    public: false, // Changed to false for better compatibility with Free accounts
+    public: false,
   };
   return spotifyFetch(url, accessToken, {
     method: 'POST',
