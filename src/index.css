@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --spotify-green: #1DB954;
+  --spotify-green-dark: #1aa34a;
+  --spotify-black: #121212;
+  --spotify-dark: #181818;
+  --spotify-card: #282828;
+  --spotify-light-gray: #B3B3B3;
+  --spotify-white: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--spotify-black);
+  color: var(--spotify-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--spotify-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: #535353;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #727272;
+}
+
+/* Animated gradient background */
+.gradient-bg {
+  background: radial-gradient(ellipse at top left, rgba(29,185,84,0.15) 0%, transparent 50%),
+              radial-gradient(ellipse at bottom right, rgba(29,185,84,0.08) 0%, transparent 50%),
+              var(--spotify-black);
+  min-height: 100vh;
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(40, 40, 40, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+}
+
+/* Spotify green button */
+.btn-spotify {
+  background: var(--spotify-green);
+  color: #000;
+  font-weight: 700;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+}
+.btn-spotify:hover {
+  background: var(--spotify-green-dark);
+  transform: scale(1.04);
+  box-shadow: 0 8px 30px rgba(29,185,84,0.4);
+}
+.btn-spotify:active {
+  transform: scale(0.98);
+}
+.btn-spotify:disabled {
+  background: #535353;
+  color: #727272;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Pulse animation */
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(29,185,84,0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(29,185,84,0); }
+}
+
+/* Spin animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin 1.5s linear infinite;
+}
+
+/* Fade in up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Track item hover */
+.track-item {
+  transition: background 0.15s ease;
+}
+.track-item:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+}
