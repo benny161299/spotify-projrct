@@ -51,21 +51,43 @@ export async function generatePlaylistTracks(userPrompt) {
   };
 
   let response;
-  try {
-    response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-  } catch {
-    throw new Error('Network error — check your connection and try again.');
+  let attempts = 0;
+  const MAX_ATTEMPTS = 3;
+
+  while (attempts < MAX_ATTEMPTS) {
+    try {
+      response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      if (response.status === 503) {
+        attempts++;
+        console.warn(`Gemini is busy (503). Retrying... attempt ${attempts}/${MAX_ATTEMPTS}`);
+        if (attempts < MAX_ATTEMPTS) {
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2s
+          continue;
+        }
+      }
+      break; // Exit loop if not 503
+    } catch (err) {
+      if (attempts < MAX_ATTEMPTS) {
+        attempts++;
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        continue;
+      }
+      throw new Error('Network error — check your connection and try again.');
+    }
   }
 
   if (!response.ok) {
-    if (response.status === 400 || response.status === 403) {
-      throw new Error('AI service unavailable — invalid or quota-exceeded API key.');
-    }
-    throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+    let errorMessage = `Gemini API error: ${response.status}`;
+    try {
+      const errData = await response.json();
+      errorMessage = errData.error?.message || errorMessage;
+    } catch {}
+    throw new Error(errorMessage);
   }
 
   const data = await response.json();

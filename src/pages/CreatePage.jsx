@@ -96,17 +96,19 @@ export default function CreatePage() {
         setTrackCount(uris.length);
         setStatus(STATUS.SUCCESS);
       } catch (err) {
-        if (err.message === 'SPOTIFY_PREMIUM_REQUIRED' || err.message.includes('403')) {
-          // If any Spotify step fails due to premium/permissions, show the tracks anyway
-          console.warn('Spotify restricted access (likely Premium required). Falling back to preview mode.');
+        console.error('Spotify Flow Error:', err);
+        if (err.message === 'SPOTIFY_PREMIUM_REQUIRED') {
           setTrackCount(aiTracks.length);
           setStatus(STATUS.SUCCESS);
-          setErrorMessage('Note: Spotify requires Premium for automatic creation. Here is your AI suggestions list!');
+          setErrorMessage('Note: Spotify still reports "Premium Required". Please try logging out and back in.');
         } else {
-          throw err;
+          // Show the actual error message from Spotify
+          setErrorMessage(`Spotify Error: ${err.message}`);
+          setStatus(STATUS.ERROR);
         }
       }
     } catch (err) {
+      console.error('Gemini/General Error:', err);
       if (err.message === 'SPOTIFY_UNAUTHORIZED') {
         handleUnauthorized();
         return;
