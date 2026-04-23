@@ -134,12 +134,13 @@ export async function createPlaylist(name, description, accessToken) {
  * @param {string} accessToken
  */
 export async function addTracksToPlaylist(playlistId, uris, accessToken) {
-  const CHUNK = 100;
-  for (let i = 0; i < uris.length; i += CHUNK) {
-    const batch = uris.slice(i, i + CHUNK);
-    await spotifyFetch(`${BASE}/playlists/${playlistId}/tracks`, accessToken, {
-      method: 'POST',
-      body: JSON.stringify({ uris: batch }),
-    });
-  }
+  if (!uris || uris.length === 0) return;
+  
+  console.log(`[Spotify] Adding ${uris.length} tracks to playlist: ${playlistId}`);
+  
+  const url = `${BASE}/playlists/${playlistId}/tracks`;
+  return spotifyFetch(url, accessToken, {
+    method: 'POST',
+    body: JSON.stringify({ uris }),
+  });
 }
